@@ -11,3 +11,4 @@ object ZIOConsole extends ZIOAppDefault {
     } yield ()
   }
 }
+
