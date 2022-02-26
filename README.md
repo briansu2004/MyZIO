@@ -87,7 +87,7 @@ Id_7 2017–10–28 00:34:34 INFO c.m.s.RepoServiceImpl: Active input: 25344
 Id_8 2017–10–28 00:35:54 DEBUG c.m.s.RepoServiceImpl: Done parsing file: 871.xml
 ```
 
-code 1
+code
 
 ```
 import java.nio.file.{Files, Paths}
@@ -118,68 +118,7 @@ object LogStreamApp extends App {
   }
 
   def run(args: List[String]): ZIO[ZEnv, Nothing, Int] = {
-    val is = Files.newInputStream(Paths.get(ClassLoader.getSystemResource("prod_log.txt").toURI()))
-
-    val theJob = (for {
-      streams <- ZStream
-        .fromInputStream(is)
-        .chunks
-        .aggregate(ZSink.utf8DecodeChunk)
-        .aggregate(ZSink.splitLines)
-        .mapConcatChunk(identity)
-        .tap(data => putStrLn(s"> $data"))
-        .filter(isErrorWarning)
-        .partition(isError, 4)
-    } yield streams).use {
-      case (leftStream, rightStream) => {
-        val errorStream = leftStream
-          .mapM(processError(_))
-          .schedule(Schedule.fixed(2.second))
-
-        val warningStream = rightStream
-          .aggregate(ZSink.collectAllN[String](10))
-          .mapM(processWarning(_))
-
-        errorStream.merge(warningStream).runCollect
-      }
-    }
-
-    theJob.fold(_ => 1, _ => 0)
-  }
-}
-```
-
-code 2
-
-```
-import java.nio.file.{Files, Paths}
-
-import zio._
-import zio.console._
-import zio.duration._
-import zio.stream._
-
-object LogStreamApp extends App {
-
-  def isErrorWarning(data: String) = {
-    data.contains("ERROR") || data.contains("WARN")
-  }
-
-  def isError(data: String): Boolean = {
-    data.contains("ERROR")
-  }
-
-  def processError(data: String) = {
-    putStrLn(s"process error message: ${data}") *>
-      Task.succeed()
-  }
-
-  def processWarning(list: List[String]) = {
-    putStrLn(s"process warning messages in batch: ${list.length} => $list") *>
-      Task.succeed()
-  }
-
-  def run(args: List[String]): ZIO[ZEnv, Nothing, Int] = {
+    //val is = Files.newInputStream(Paths.get(ClassLoader.getSystemResource("prod_log.txt").toURI()))
     val is = Files.newInputStream(Paths.get("C:/temp/data/prod_log.txt"))
 
     val theJob = (for {
@@ -226,3 +165,99 @@ libraryDependencies ++= Seq(
 ## 2022-02-27
 
 ...
+
+- ZIO stream
+
+![](image/README/zio_stream_01.png)
+
+![](image/README/zio_stream_02.png)
+
+![](image/README/zio_stream_03.png)
+
+![](image/README/zio_stream_04.png)
+
+![](image/README/zio_stream_05.png)
+
+![](image/README/zio_stream_06.png)
+
+![](image/README/zio_stream_07.png)
+
+![](image/README/zio_stream_08.png)
+
+![](image/README/zio_stream_09.png)
+
+![](image/README/zio_stream_10.png)
+
+![](image/README/zio_stream_11.png)
+
+![](image/README/zio_stream_12.png)
+
+![](image/README/zio_stream_13.png)
+
+![](image/README/zio_stream_14.png)
+
+![](image/README/zio_stream_15.png)
+
+![](image/README/zio_stream_16.png)
+
+![](image/README/zio_stream_17.png)
+
+![](image/README/zio_stream_18.png)
+
+![](image/README/zio_stream_19.png)
+
+![](image/README/zio_stream_20.png)
+
+![](image/README/zio_stream_21.png)
+
+![](image/README/zio_stream_22.png)
+
+![](image/README/zio_stream_23.png)
+
+![](image/README/zio_stream_24.png)
+
+![](image/README/zio_stream_25.png)
+
+![](image/README/zio_stream_26.png)
+
+![](image/README/zio_stream_27.png)
+
+![](image/README/zio_stream_28.png)
+
+![](image/README/zio_stream_29.png)
+
+![](image/README/zio_stream_30.png)
+
+![](image/README/zio_stream_31.png)
+
+![](image/README/zio_stream_32.png)
+
+![](image/README/zio_stream_33.png)
+
+![](image/README/zio_stream_34.png)
+
+![](image/README/zio_stream_35.png)
+
+![](image/README/zio_stream_36.png)
+
+![](image/README/zio_stream_37.png)
+
+![](image/README/zio_stream_38.png)
+
+![](image/README/zio_stream_39.png)
+
+![](image/README/zio_stream_40.png)
+
+![](image/README/zio_stream_41.png)
+
+![](image/README/zio_stream_42.png)
+
+![](image/README/zio_stream_43.png)
+
+![](image/README/zio_stream_44.png)
+
+![](image/README/zio_stream_45.png)
+
+![](image/README/zio_stream_46.png)
+
+![](image/README/zio_stream_47.png)
