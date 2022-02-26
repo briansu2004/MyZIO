@@ -26,9 +26,18 @@ A functional effect is about the description of doing something, as in zio.Conso
 
 build.sbt
 
+zio 2.x
+
 ```
 libraryDependencies += "dev.zio" %% "zio" % "2.0.0-M4"
 libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.0-M4"
+```
+
+zio 1.x
+
+```
+libraryDependencies += "dev.zio" %% "zio" % "1.0.13"
+libraryDependencies += "dev.zio" %% "zio-streams" % "1.0.13"
 ```
 
 ## STM (Software Transactional Memory)
@@ -36,3 +45,9 @@ libraryDependencies += "dev.zio" %% "zio-streams" % "2.0.0-M4"
 ## Misc
 
 ![](image/README/zio_interop.png)
+
+## 2022-02-26
+
+- ZIO NIO
+
+  A small, unopinionated ZIO interface to NIO
