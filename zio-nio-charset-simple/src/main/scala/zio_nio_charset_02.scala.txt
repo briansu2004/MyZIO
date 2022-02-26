@@ -1,0 +1,27 @@
+import zio.nio.charset._
+import zio.nio.channels.FileChannel
+import zio.nio.channels._
+import zio.nio.file.Path
+import zio.stream.ZStream
+import zio.blocking.Blocking
+import zio.console
+import zio.ZIO
+
+object zio_nio_charset_02 extends App {
+  // dump a file encoded in ISO8859 to the console
+
+  FileChannel.open(Path("iso8859.txt")).useNioBlockingOps { fileOps =>
+    val inStream: ZStream[Blocking, Exception, Byte] = ZStream.repeatEffectChunkOption {
+      fileOps.readChunk(1000).asSomeError.flatMap { chunk =>
+        if (chunk.isEmpty) ZIO.fail(None) else ZIO.succeed(chunk)
+      }
+    }
+
+    // apply decoding transducer
+    val charStream: ZStream[Blocking, Exception, Char] =
+      inStream.transduce(Charset.Standard.iso8859_1.newDecoder.transducer())
+
+    console.putStrLn("ISO8859 file contents:") *>
+      charStream.foreachChunk(chars => console.putStr(chars.mkString))
+  }
+}
