@@ -162,10 +162,6 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## 2022-02-27
-
-...
-
 - ZIO stream
 
 ![](image/README/zio_stream_01.png)
@@ -261,3 +257,7 @@ libraryDependencies ++= Seq(
 ![](image/README/zio_stream_46.png)
 
 ![](image/README/zio_stream_47.png)
+
+## 2022-02-27
+
+...
